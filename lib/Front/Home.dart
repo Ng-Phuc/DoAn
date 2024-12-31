@@ -2,6 +2,7 @@
   import 'Cart.dart';
   import 'Login.dart';
   import 'Register.dart';
+  import 'Detail.dart';
 
   class FoodShopHomePage extends StatefulWidget {
     @override
@@ -150,12 +151,15 @@
                   ...List.generate(4, (index) {
                     String productName = 'Món ăn ${index + 1}';
                     String productPrice = '15,000 VND';
+                    String oldPrice = '20,000 VND';
+                    String imageUrl = 'https://www.chefspencil.com/wp-content/uploads/Kokoda.jpg';
+
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                       child: Card(
                         child: ListTile(
                           leading: Image.network(
-                            'https://www.chefspencil.com/wp-content/uploads/Kokoda.jpg',
+                            imageUrl,
                             width: 60,
                             height: 60,
                             fit: BoxFit.cover,
@@ -172,7 +176,7 @@
                               ),
                               SizedBox(width: 8),
                               Text(
-                                '20,000 VND',
+                                oldPrice,
                                 style: TextStyle(
                                   decoration: TextDecoration.lineThrough,
                                   color: Colors.grey,
@@ -186,10 +190,30 @@
                               addToCart(productName, productPrice);
                             },
                           ),
+                          onTap: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Detail(
+                                  productName: productName,
+                                  productPrice: productPrice,
+                                  oldPrice: oldPrice,
+                                  imageUrl: imageUrl,
+                                ),
+                              ),
+                            );
+
+                            if (result != null && result is Map<String, String>) {
+                              setState(() {
+                                cart.add(result);
+                              });
+                            }
+                          },
                         ),
                       ),
                     );
                   }),
+
                 ],
               ),
             ),
